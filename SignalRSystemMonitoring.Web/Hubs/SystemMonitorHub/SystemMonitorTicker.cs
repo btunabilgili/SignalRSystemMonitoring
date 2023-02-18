@@ -35,25 +35,28 @@ namespace SignalRSystemMonitoring.Hubs
             {
                 var cpuCounter = new PerformanceCounter("Processor", "% Processor Time", "_Total");
                 var memoryCounter = new PerformanceCounter("Memory", "Available MBytes");
+                var diskCounter = new PerformanceCounter("PhysicalDisk", "% Disk Time", "_Total"); ;
 
                 ObjectQuery wql = new("SELECT * FROM Win32_OperatingSystem");
                 ManagementObjectSearcher searcher = new(wql);
                 var results = searcher.Get().Cast<ManagementObject>();
-
-                ManagementObjectSearcher cpuSearch = new ManagementObjectSearcher(@"\root\CIMV2",
-                    "SELECT * FROM Win32_PerfFormattedData_PerfOS_Processor WHERE Name=\"_Total\"");
-                ManagementObjectCollection moc = cpuSearch.Get();
-                //ManagementObject mo = moc.Cast<managementobject>().First();
-                //string cpu = mo["PercentIdleTime"].ToString();
+                var totalMemory = Convert.ToDouble(results.FirstOrDefault()?["TotalVisibleMemorySize"]) / (1024 * 1024);
 
                 while (!cancellationToken.IsCancellationRequested)
                 {
                     cpuCounter.NextValue();
                     memoryCounter.NextValue();
+                    diskCounter.NextValue();
 
                     await Task.Delay(1000, cancellationToken);
 
-                    await _hubContext.Clients.All.SendAsync("testing", new { cpu = cpuCounter.NextValue(), totalMemory = (Convert.ToDouble(results.FirstOrDefault()?["TotalVisibleMemorySize"]) / (1024 * 1024)).ToString("0.##"), memory = (memoryCounter.NextValue() / 1000).ToString("0.##") }, cancellationToken);
+                    await _hubContext.Clients.All.SendAsync("testing", new
+                    {
+                        cpu = cpuCounter.NextValue(),
+                        totalMemory,
+                        usedMemory = totalMemory - (memoryCounter.NextValue() / 1024),
+                        disk = diskCounter.NextValue().ToString("0.##")
+                    },cancellationToken);
 
                     await Task.Delay(1000, cancellationToken);
                 }
