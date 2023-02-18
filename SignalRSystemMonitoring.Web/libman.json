@@ -16,6 +16,13 @@
       "files": [
         "moment.min.js"
       ]
+    },
+    {
+      "library": "microsoft-signalr@7.0.3",
+      "destination": "wwwroot/lib/signalr/",
+      "files": [
+        "signalr.min.js"
+      ]
     }
   ]
 }

@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
@@ -23,6 +23,8 @@ using Serenity.Web;
 using System;
 using System.Data.Common;
 using System.IO;
+using Microsoft.AspNetCore.SignalR;
+using SignalRSystemMonitoring.Hubs;
 
 namespace SignalRSystemMonitoring
 {
@@ -152,6 +154,8 @@ namespace SignalRSystemMonitoring
             services.AddSingleton<IReportRegistry, ReportRegistry>();
             services.AddExcelExporter();
             services.AddSingleton<IDataMigrations, DataMigrations>();
+            services.AddSingleton<ISystemMonitorTicker, SystemMonitorTicker>();
+            services.AddSignalR();
         }
 
         public static void InitializeLocalTexts(IServiceProvider services)
@@ -210,6 +214,7 @@ namespace SignalRSystemMonitoring
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHub<SystemMonitorHub>("/SystemHealth");
             });
 
             app.ApplicationServices.GetRequiredService<IDataMigrations>().Initialize();
