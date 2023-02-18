@@ -29,7 +29,7 @@ namespace SignalRSystemMonitoring.Hubs
 
             while (!cancellationToken.IsCancellationRequested)
             {
-                await _hubContext.Clients.All.SendAsync("Testing for the first time!", cancellationToken);
+                await _hubContext.Clients.All.SendAsync("testing", "testing", cancellationToken);
 
                 await Task.Delay(2000, cancellationToken);
             }
