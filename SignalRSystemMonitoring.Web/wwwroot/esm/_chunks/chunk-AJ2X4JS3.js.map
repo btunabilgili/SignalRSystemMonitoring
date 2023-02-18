@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["external-global:@serenity-is/corelib"],
+  "sourcesContent": ["module.exports = Serenity;"],
+  "mappings": "+4BAAA,IAAAA,EAAAC,EAAA,CAAAC,EAAAC,IAAA,CAAAA,EAAO,QAAU",
+  "names": ["require_corelib", "__commonJSMin", "exports", "module"]
+}

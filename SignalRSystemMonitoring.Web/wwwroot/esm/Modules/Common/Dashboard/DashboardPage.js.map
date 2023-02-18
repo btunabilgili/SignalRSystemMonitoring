@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../../../Modules/Common/Dashboard/DashboardPage.ts"],
+  "sourcesContent": ["import { TemplatedPanel } from \"@serenity-is/corelib\";\r\n//import { ErrorHandling, isEmptyOrNull, notifyError, parseQueryString, resolveUrl, serviceCall, ServiceResponse, localText, htmlEncode } from \"@serenity-is/corelib/q\";\r\n\n$(function () {\n    new DashboardPanel($('#dashboard-container'));\n});\n\r\nclass DashboardPanel extends TemplatedPanel<any> {\r\n    constructor(container: JQuery) {\r\n        super(container);\r\n\r\n        alert(\"worked\");\r\n    }\r\n\r\n    protected getTemplate() {\r\n        return `<div>I am here</div>`;\r\n    }\r\n}"],
+  "mappings": "qEAAA,IAAAA,EAA+B,SAG/B,EAAE,UAAY,CACV,IAAIC,EAAe,EAAE,sBAAsB,CAAC,CAChD,CAAC,EAED,IAAMA,EAAN,cAA6B,gBAAoB,CAC7C,YAAYC,EAAmB,CAC3B,MAAMA,CAAS,EAEf,MAAM,QAAQ,CAClB,CAEU,aAAc,CACpB,MAAO,sBACX,CACJ,EAVMC,EAAAF,EAAA",
+  "names": ["import_corelib", "DashboardPanel", "container", "__name"]
+}

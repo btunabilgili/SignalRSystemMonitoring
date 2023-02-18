@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["external-global:@serenity-is/corelib/q"],
+  "sourcesContent": ["module.exports = Q;"],
+  "mappings": "wCAAA,IAAAA,EAAAC,EAAA,CAAAC,EAAAC,IAAA,CAAAA,EAAO,QAAU",
+  "names": ["require_q", "__commonJSMin", "exports", "module"]
+}
