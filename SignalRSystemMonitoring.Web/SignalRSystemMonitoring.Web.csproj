@@ -26,7 +26,9 @@
     <PackageReference Include="Serenity.Net.Web" Version="6.5.1" />
     <PackageReference Include="Serenity.Extensions" Version="6.5.1" />
   </ItemGroup>
-  <ItemGroup></ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="System.Diagnostics.PerformanceCounter" Version="7.0.0" />
+  </ItemGroup>
   <Target Name="NpmInstall" BeforeTargets="BeforeBuild" Condition="!Exists('node_modules\@types\jquery\index.d.ts')">
     <Message Text="Installing NPM packages..." Importance="high" />
     <Exec Command="npm install" />
