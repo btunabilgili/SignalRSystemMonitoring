@@ -12,12 +12,18 @@ class DashboardPanel extends TemplatedPanel<any> {
     constructor(container: JQuery) {
         super(container);
 
+        this.element.append(`<div class="cpu"></div>`);
+        this.element.append(`<div class="total-memory"></div>`);
+        this.element.append(`<div class="memory"></div>`);
+
         this._hubConnection = new HubConnectionBuilder()
             .withUrl('/SystemHealth')
             .build();
 
-        this._hubConnection.on('testing', (message: string) => {
-            console.log(message)
+        this._hubConnection.on('testing', (data) => {
+            this.element.find(".cpu").html("CPU: " + data.cpu);
+            this.element.find(".total-memory").html("Total Memory: " + data.totalMemory);
+            this.element.find(".memory").html("Memory: " + data.memory);
         });
 
         this._hubConnection.start().catch(err => console.error(err.toString()));
