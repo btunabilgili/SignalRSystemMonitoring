@@ -50,7 +50,7 @@ namespace SignalRSystemMonitoring.Hubs
 
                     await Task.Delay(1000, cancellationToken);
 
-                    await _hubContext.Clients.All.SendAsync("testing", new
+                    await _hubContext.Clients.All.SendAsync("SystemMonitoring", new
                     {
                         cpu = cpuCounter.NextValue(),
                         totalMemory,

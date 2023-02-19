@@ -24,66 +24,66 @@ class DashboardPanel extends TemplatedPanel<any> {
             .withUrl('/SystemHealth')
             .build();
 
-        this._hubConnection.on('testing', (data) => {
+        var baseConfig = {
+            type: 'gauge',
+            data: {
+                datasets: [{
+                    data: [30, 50, 80, 100],
+                    value: null,
+                    backgroundColor: ['green', 'yellow', 'orange', 'red'],
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                title: {
+                    display: true,
+                    text: ''
+                },
+                layout: {
+                    padding: {
+                        bottom: 30
+                    }
+                },
+                needle: {
+                    radiusPercentage: 2,
+                    widthPercentage: 3.2,
+                    lengthPercentage: 80,
+                    color: 'rgba(0, 0, 0, 1)'
+                },
+                valueLabel: {
+                    formatter: Math.round
+                },
+                plugins: {
+                    datalabels: {
+                        display: true,
+                        formatter: function (value, context) {
+                            return '< ' + Math.round(value);
+                        },
+                        color: function (context) {
+                            return context.dataset.backgroundColor;
+                        },
+                        backgroundColor: 'rgba(0, 0, 0, 1.0)',
+                        borderWidth: 0,
+                        borderRadius: 5,
+                        font: {
+                            weight: 'bold'
+                        }
+                    }
+                }
+            }
+        }
+
+        this._hubConnection.on('SystemMonitoring', (data) => {
             if (!this._cpuChart) {
+                var cpuConfig = JSON.parse(JSON.stringify(baseConfig));
+                cpuConfig.options.title.text = "CPU Usage (%)";
+                cpuConfig.data.datasets[0].value = Math.round(data.cpu);
+
                 // @ts-ignore
                 var ctx = document.getElementById('cpu-chart').getContext('2d');
                 // @ts-ignore
-                this._cpuChart = new Chart(ctx, {
-                    type: 'gauge',
-                    data: {
-                        //labels: ['Success', 'Warning', 'Warning', 'Error'],
-                        datasets: [{
-                            data: [30, 50, 80, 100],
-                            value: Math.round(data.cpu),
-                            backgroundColor: ['green', 'yellow', 'orange', 'red'],
-                            borderWidth: 2
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        title: {
-                            display: true,
-                            text: 'CPU Usage (%)'
-                        },
-                        layout: {
-                            padding: {
-                                bottom: 30
-                            }
-                        },
-                        needle: {
-                            // Needle circle radius as the percentage of the chart area width
-                            radiusPercentage: 2,
-                            // Needle width as the percentage of the chart area width
-                            widthPercentage: 3.2,
-                            // Needle length as the percentage of the interval between inner radius (0%) and outer radius (100%) of the arc
-                            lengthPercentage: 80,
-                            // The color of the needle
-                            color: 'rgba(0, 0, 0, 1)'
-                        },
-                        valueLabel: {
-                            formatter: Math.round
-                        },
-                        plugins: {
-                            datalabels: {
-                                display: true,
-                                formatter: function (value, context) {
-                                    return '< ' + Math.round(value);
-                                },
-                                color: function (context) {
-                                    return context.dataset.backgroundColor;
-                                },
-                                //color: 'rgba(255, 255, 255, 1.0)',
-                                backgroundColor: 'rgba(0, 0, 0, 1.0)',
-                                borderWidth: 0,
-                                borderRadius: 5,
-                                font: {
-                                    weight: 'bold'
-                                }
-                            }
-                        }
-                    }
-                });
+                this._cpuChart = new Chart(ctx, cpuConfig);
             }
             else {
                 this._cpuChart.data.datasets.forEach(function (dataset) {
@@ -93,64 +93,15 @@ class DashboardPanel extends TemplatedPanel<any> {
             }
 
             if (!this._memoryChart) {
+                var memoryConfig = JSON.parse(JSON.stringify(baseConfig));
+                memoryConfig.data.datasets[0].data = [Math.round(data.totalMemory / 4), Math.round(data.totalMemory / 2), Math.round(data.totalMemory / 1.5), Math.round(data.totalMemory)];
+                memoryConfig.options.title.text = "Memory Usage (GB)";
+                memoryConfig.data.datasets[0].value = Math.round(data.usedMemory);
+
                 // @ts-ignore
                 var ctx = document.getElementById('memory-chart').getContext('2d');
                 // @ts-ignore
-                this._memoryChart = new Chart(ctx, {
-                    type: 'gauge',
-                    data: {
-                        //labels: ['Success', 'Warning', 'Warning', 'Error'],
-                        datasets: [{
-                            data: [data.totalMemory/4, data.totalMemory/2, data.totalMemory/1.5, data.totalMemory],
-                            value: Math.round(data.usedMemory),
-                            backgroundColor: ['green', 'yellow', 'orange', 'red'],
-                            borderWidth: 2
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        title: {
-                            display: true,
-                            text: 'Memory Usage (GB)'
-                        },
-                        layout: {
-                            padding: {
-                                bottom: 30
-                            }
-                        },
-                        needle: {
-                            // Needle circle radius as the percentage of the chart area width
-                            radiusPercentage: 2,
-                            // Needle width as the percentage of the chart area width
-                            widthPercentage: 3.2,
-                            // Needle length as the percentage of the interval between inner radius (0%) and outer radius (100%) of the arc
-                            lengthPercentage: 80,
-                            // The color of the needle
-                            color: 'rgba(0, 0, 0, 1)'
-                        },
-                        valueLabel: {
-                            formatter: Math.round
-                        },
-                        plugins: {
-                            datalabels: {
-                                display: true,
-                                formatter: function (value, context) {
-                                    return '< ' + Math.round(value);
-                                },
-                                color: function (context) {
-                                    return context.dataset.backgroundColor;
-                                },
-                                //color: 'rgba(255, 255, 255, 1.0)',
-                                backgroundColor: 'rgba(0, 0, 0, 1.0)',
-                                borderWidth: 0,
-                                borderRadius: 5,
-                                font: {
-                                    weight: 'bold'
-                                }
-                            }
-                        }
-                    }
-                });
+                this._memoryChart = new Chart(ctx, memoryConfig);
             }
             else {
                 this._memoryChart.data.datasets.forEach(function (dataset) {
@@ -160,64 +111,13 @@ class DashboardPanel extends TemplatedPanel<any> {
             }
 
             if (!this._diskChart) {
+                var diskConfig = JSON.parse(JSON.stringify(baseConfig));
+                diskConfig.options.title.text = "Disk Usage (%)";
+                diskConfig.data.datasets[0].value = Math.round(data.disk);
                 // @ts-ignore
                 var ctx = document.getElementById('disk-chart').getContext('2d');
                 // @ts-ignore
-                this._diskChart = new Chart(ctx, {
-                    type: 'gauge',
-                    data: {
-                        //labels: ['Success', 'Warning', 'Warning', 'Error'],
-                        datasets: [{
-                            data: [30, 50, 80, 100],
-                            value: Math.round(data.disk),
-                            backgroundColor: ['green', 'yellow', 'orange', 'red'],
-                            borderWidth: 2
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        title: {
-                            display: true,
-                            text: 'Disk Usage (%)'
-                        },
-                        layout: {
-                            padding: {
-                                bottom: 30
-                            }
-                        },
-                        needle: {
-                            // Needle circle radius as the percentage of the chart area width
-                            radiusPercentage: 2,
-                            // Needle width as the percentage of the chart area width
-                            widthPercentage: 3.2,
-                            // Needle length as the percentage of the interval between inner radius (0%) and outer radius (100%) of the arc
-                            lengthPercentage: 80,
-                            // The color of the needle
-                            color: 'rgba(0, 0, 0, 1)'
-                        },
-                        valueLabel: {
-                            formatter: Math.round
-                        },
-                        plugins: {
-                            datalabels: {
-                                display: true,
-                                formatter: function (value, context) {
-                                    return '< ' + Math.round(value);
-                                },
-                                color: function (context) {
-                                    return context.dataset.backgroundColor;
-                                },
-                                //color: 'rgba(255, 255, 255, 1.0)',
-                                backgroundColor: 'rgba(0, 0, 0, 1.0)',
-                                borderWidth: 0,
-                                borderRadius: 5,
-                                font: {
-                                    weight: 'bold'
-                                }
-                            }
-                        }
-                    }
-                });
+                this._diskChart = new Chart(ctx, diskConfig);
             }
             else {
                 this._diskChart.data.datasets.forEach(function (dataset) {
@@ -225,10 +125,6 @@ class DashboardPanel extends TemplatedPanel<any> {
                 });
                 this._diskChart.update();
             }
-            this.element.find(".cpu").html("CPU: " + data.cpu);
-            this.element.find(".disk").html("Disk: " + data.disk);
-            this.element.find(".total-memory").html("Total Memory: " + data.totalMemory);
-            this.element.find(".memory").html("Memory: " + data.usedMemory);
         });
 
         this._hubConnection.start().catch(err => console.error(err.toString()));
