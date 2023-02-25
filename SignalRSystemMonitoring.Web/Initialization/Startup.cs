@@ -25,6 +25,7 @@ using System.Data.Common;
 using System.IO;
 using Microsoft.AspNetCore.SignalR;
 using SignalRSystemMonitoring.Hubs;
+using SignalRSystemMonitoring.Administration;
 
 namespace SignalRSystemMonitoring
 {
@@ -155,7 +156,8 @@ namespace SignalRSystemMonitoring
             services.AddExcelExporter();
             services.AddSingleton<IDataMigrations, DataMigrations>();
             services.AddSingleton<ISystemMonitorTicker, SystemMonitorTicker>();
-            services.AddSignalR();
+            services.AddSignalR()
+                    .AddHubOptions<SystemMonitorHub>(options => options.AddFilter<SystemMonitorAuthorize>());
         }
 
         public static void InitializeLocalTexts(IServiceProvider services)

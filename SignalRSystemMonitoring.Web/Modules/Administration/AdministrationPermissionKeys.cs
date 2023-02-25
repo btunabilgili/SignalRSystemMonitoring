@@ -1,4 +1,4 @@
-﻿
+
 using Serenity.ComponentModel;
 using System.ComponentModel;
 
@@ -13,5 +13,8 @@ namespace SignalRSystemMonitoring.Administration
 
         [Description("Languages and Translations")]
         public const string Translation = "Administration:Translation";
+
+        [Description("System Monitoring")]
+        public const string SystemMonitoring = "Administration:SystemMonitoring";
     }
 }

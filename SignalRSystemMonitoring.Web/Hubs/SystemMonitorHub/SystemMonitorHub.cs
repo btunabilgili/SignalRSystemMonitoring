@@ -1,4 +1,8 @@
 using Microsoft.AspNetCore.SignalR;
+using Serenity;
+using Serenity.Abstractions;
+using Serenity.Services;
+using SignalRSystemMonitoring.Administration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace SignalRSystemMonitoring.Hubs
 {
+    [SystemMonitorAuthorize]
     public class SystemMonitorHub : Hub
     {
         private static readonly HashSet<string> _userConnectionIds = new HashSet<string>();
